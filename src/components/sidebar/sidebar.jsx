@@ -1,50 +1,63 @@
-/* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./sidebar.css";
 import { assets } from "./../../assets/assets";
+import { context } from "../../context/context";
 
 function SideBar() {
   const [openDrawer, setopenDrawer] = useState(false);
+  const { onSent, previousPrompt, setrecentPrompt, input, ResetData, setloading, setresultData } = useContext(context);
+
+  const recentPrompt = async (message) => {
+    console.log(message, "message")
+    setrecentPrompt(message);
+    await onSent(message);
+  };
+
 
   return (
     <div className="sidebar">
       <div className="top">
-        <img onClick={() => setopenDrawer(!openDrawer)} className="menu" src={assets.menu_icon} />
-        <div className="newchat">
+        <img
+          onClick={() => setopenDrawer(!openDrawer)}
+          className="menu"
+          src={assets.menu_icon}
+        />
+        <div className="newchat" onClick={() => ResetData()}>
           <img src={assets.plus_icon} />
-          {openDrawer ? <p>New Chat</p> : null}
+          {openDrawer ? <p >New Chat</p> : null}
         </div>
         {openDrawer ? (
           <div className="recent">
             <p className="recenttitle">Recent</p>
-            <div className="recententry">
-              <img src={assets.message_icon} />
-              <p>What is React...</p>
-            </div>
+            {previousPrompt.map((item, index) => {
+                return (
+                  <div 
+                  onClick={() => recentPrompt(item)}
+                    key={index} 
+                    className="recententry"
+                  >
+                    <p>{item.slice(0, 18)}...</p>
+
+                    <img src={assets.message_icon} />
+
+                  </div>
+                );
+              })}
           </div>
         ) : null}
       </div>
       <div className="bottom ">
         <div className="bottom-item recententry">
           <img src={assets.question_icon} />
-          {
-            openDrawer ?           <p>Help</p> : null
-
-          }
+          {openDrawer ? <p>Help</p> : null}
         </div>
         <div className="bottom-item recententry">
           <img src={assets.history_icon} />
-          {
-            openDrawer ?          <p>Activity</p>
-: null
-          }
+          {openDrawer ? <p>Activity</p> : null}
         </div>
         <div className="bottom-item recententry">
           <img src={assets.setting_icon} />
-          {
-            openDrawer ?           <p>Settings</p>
-: null
-          }
+          {openDrawer ? <p>Settings</p> : null}
         </div>
       </div>
     </div>
