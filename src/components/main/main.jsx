@@ -1,11 +1,12 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import './main.css'
 import { assets } from '../../assets/assets'
 import { context } from '../../context/context'
  
 function Main() {
 
-    const {onSent, recentPrompt, showResult, loading, resultData, setinput, input, ResetData} = useContext(context)
+
+    const {onSent, recentPrompt, showResult, loading, resultData, setinput, input, ResetData, chatHistory } = useContext(context)
 
     console.log(input)
     const handleEnterKeyPress = (event, input) => {
@@ -23,6 +24,8 @@ function Main() {
     <img src={assets.imageiCOn} />
     </div>
     <div className='main-container'>
+
+    
     {
         !showResult ? <div>
         <div className='greet'>

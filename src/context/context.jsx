@@ -7,6 +7,7 @@ const ContextProvider = (props) => {
   const [input, setinput] = useState("");
   const [recentPrompt, setrecentPrompt] = useState("");
   const [previousPrompt, setpreviousPrompt] = useState([]);
+  const [chatHistory, setChatHistory] = useState([]);
 
   const [showResult, setshowResult] = useState(false);
   const [loading, setloading] = useState(false);
@@ -28,11 +29,25 @@ const ContextProvider = (props) => {
         if (prompt!== undefined &&!(prompt instanceof Object)) {
     
           response = await run(prompt);
+            setinput('')
+          console.log(input)
           setrecentPrompt(prompt);
+          setChatHistory(prev => [...prev, {
+  role: "user",
+  content: prompt
+}]);
+
+
         } else {
           setpreviousPrompt((prev) => [...prev, input]);
           setrecentPrompt(input);
+          setChatHistory(prev => [...prev, {
+  role: "user",
+  content: input
+}]);
+
           response =  await run(input);
+        
         }
     
         let responseArray = response.split("**");
@@ -52,6 +67,11 @@ const ContextProvider = (props) => {
         }
         setloading(false);
         setinput("");
+        setChatHistory(prev => [...prev, {
+  role: "bot",
+  content: newResponse2   // bot message with formatting
+}]);
+
       };
   console.log(previousPrompt);
 
@@ -77,7 +97,8 @@ const ContextProvider = (props) => {
     setloading,
     resultData,
     setresultData,
-    ResetData
+    ResetData,
+    chatHistory
   };
 
   return (
